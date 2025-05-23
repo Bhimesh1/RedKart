@@ -191,7 +191,111 @@ Visit [http://localhost:8090](http://localhost:8090) and see the **custom home p
 | Page Loads Without Login       | ✅     |
 
 
+# 📘 Phase 3 Explanation – Product Entity, Repository & Listing
 
+This document explains everything done in **Phase 3** of the RedKart project — defining the product model, seeding data, and rendering the product list in a Thymeleaf view.
+
+---
+
+## ✅ Step 1: Created Product Entity
+
+**File:** `Product.java`
+
+```java
+@Entity
+public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+    private String description;
+    private Double price;
+    private Integer stock;
+
+    // Constructor, Getters, Setters...
+}
+```
+
+- This maps to a `Product` table in the H2 database.
+- Fields become columns in the DB.
+
+---
+
+## ✅ Step 2: Created Product Repository
+
+**File:** `ProductRepository.java`
+
+```java
+public interface ProductRepository extends JpaRepository<Product, Long> {}
+```
+
+- Gives us access to common CRUD methods like `findAll()`, `save()`, etc.
+- No SQL or implementation needed — Spring Data JPA handles it.
+
+---
+
+## ✅ Step 3: Seeded Product Data
+
+**File:** `DataInitializer.java`
+
+```java
+@Bean
+public CommandLineRunner loadData(ProductRepository productRepository) {
+    return args -> {
+        if (productRepository.count() == 0) {
+            productRepository.save(new Product(...));
+        }
+    };
+}
+```
+
+- Automatically runs at app startup.
+- Adds products only if DB is empty.
+- Verifiable via `/h2-console`.
+
+---
+
+## ✅ Step 4: Displayed Products on Home Page
+
+**Updated Controller:** `HomeController.java`
+
+```java
+@GetMapping("/")
+public String home(Model model) {
+    model.addAttribute("products", productRepository.findAll());
+    return "home";
+}
+```
+
+**Updated View:** `home.html`
+
+```html
+<div th:each="product : ${products}">
+    <h2 th:text="${product.name}">Product Name</h2>
+    ...
+</div>
+```
+
+- Dynamically loops through and displays products.
+- Product data now flows from DB → Controller → UI.
+
+---
+
+## 🧪 Summary
+
+| Task                       | Status |
+|----------------------------|--------|
+| Product entity created     | ✅     |
+| Repository ready           | ✅     |
+| Seeded startup data        | ✅     |
+| Product listing view built | ✅     |
+
+---
+
+## ✅ Next Up
+
+We now move to **Phase 4: Cart Flow** — adding products to a session-based shopping cart.
 
 
 

@@ -18,6 +18,15 @@
     <p th:text="${product.description}">Product Description</p>
     <p><strong th:text="'$' + ${product.price}">Price</strong></p>
     <p th:text="'Stock: ' + ${product.stock}">Stock</p>
+
+    <form th:action="@{/cart/add/{id}(id=${product.id})}" method="post">
+        <button type="submit">Add to Cart</button>
+    </form>
 </div>
+
+<!-- Cart link -->
+<p style="margin-top:2rem;">
+    <a href="/cart">🛒 View Cart</a>
+</p>
 </body>
 </html>

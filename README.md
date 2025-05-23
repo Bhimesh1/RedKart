@@ -34,6 +34,7 @@ RedKart/
 │   │   │   ├── controller/
 │   │   │   ├── model/
 │   │   │   ├── repository/
+│   │   │   └── config/
 │   │   │   └── ShoppingCartApplication.java
 │   │   └── resources/
 │   │       ├── templates/
@@ -76,9 +77,22 @@ JDBC URL: `jdbc:h2:mem:redkartdb`
 
 ---
 
+## 📦 Features Implemented
+
+- Spring Boot project initialized
+- Custom home page with Thymeleaf
+- Spring Security disabled (for development)
+- Product entity with JPA
+- Repository for DB access
+- Sample product data auto-seeded
+- Dynamic product list on home page
+
+---
+
+
 ## 📌 Configuration
 
-All configuration is located in:
+All app settings can be found in:
 
 **`src/main/resources/application.properties`**
 
