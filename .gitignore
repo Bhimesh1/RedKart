@@ -1,0 +1,22 @@
+# Java
+/target
+*.class
+
+# Maven
+.mvn/
+!.mvn/wrapper/maven-wrapper.jar
+**/dependency-reduced-pom.xml
+build.log
+.mvn/timing.properties
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+
+# System
+.DS_Store
+Thumbs.db
+
+# Env
+*.env
