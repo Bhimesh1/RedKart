@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>RedKart Home</title>
+    <title>RedKart – Products</title>
     <style>
-        body {
-            font-family: sans-serif;
-            text-align: center;
-            padding-top: 5rem;
-        }
+        body { font-family: sans-serif; padding: 2rem; }
+        .product { border: 1px solid #ccc; padding: 1rem; margin-bottom: 1rem; border-radius: 6px; }
+        h1 { margin-bottom: 2rem; }
     </style>
 </head>
 <body>
 <h1>🛒 Welcome to RedKart</h1>
-<p>Start shopping your favorite products now.</p>
+<div th:if="${products.size() == 0}">
+    <p>No products available.</p>
+</div>
+<div th:each="product : ${products}" class="product">
+    <h2 th:text="${product.name}">Product Name</h2>
+    <p th:text="${product.description}">Product Description</p>
+    <p><strong th:text="'$' + ${product.price}">Price</strong></p>
+    <p th:text="'Stock: ' + ${product.stock}">Stock</p>
+</div>
 </body>
 </html>
