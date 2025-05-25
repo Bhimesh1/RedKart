@@ -29,6 +29,34 @@ public class ShoppingCartController {
         return "cart";
     }
 
+    // Show checkout page
+    @GetMapping("/checkout")
+    public String showCheckoutPage(HttpSession session, Model model) {
+        List<CartItem> cart = getCart(session);
+
+        if (cart.isEmpty()) {
+            return "redirect:/cart"; // prevent empty checkouts
+        }
+
+        model.addAttribute("cartItems", cart);
+        model.addAttribute("total", calculateTotal(cart));
+        return "checkout";
+    }
+
+    // Handle checkout form submit
+    @PostMapping("/checkout")
+    public String processCheckout(HttpSession session) {
+        // In real apps: Save order, send email, etc.
+        session.removeAttribute("cart"); // clear cart after checkout
+        return "redirect:/cart/checkout/success";
+    }
+
+    // Show success page
+    @GetMapping("/checkout/success")
+    public String checkoutSuccess() {
+        return "success";
+    }
+
     // Add item to cart
     @PostMapping("/add/{productId}")
     public String addToCart(@PathVariable Long productId, HttpSession session) {
@@ -40,7 +68,7 @@ public class ShoppingCartController {
         // Check if item already exists in cart
         for (CartItem item : cart) {
             if (item.getProduct().getId().equals(productId)) {
-                item.incrementQuantity();
+                item.increment(); // Assumes you added this method in CartItem
                 session.setAttribute("cart", cart);
                 return "redirect:/";
             }

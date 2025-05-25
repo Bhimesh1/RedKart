@@ -6,21 +6,24 @@ RedKart is a Spring Boot-based e-commerce shopping cart web application built wi
 
 ## 🎯 Features
 
-- Product catalog with listing
-- User login and registration
-- Shopping cart (session-based)
-- Transactional checkout
-- H2 in-memory database
-- Thymeleaf server-rendered views
+* 🛍 Product catalog with listing
+* 🔐 User login and registration
+* 🧺 Shopping cart (session-based)
+* 💳 Transactional checkout
+* 🧠 H2 in-memory database with GUI console
+* 🌐 Thymeleaf server-rendered HTML views
 
 ---
 
 ## 🧰 Tech Stack
 
-- **Backend:** Java 17, Spring Boot, Spring MVC, Spring Security, Spring Data JPA
-- **Frontend:** Thymeleaf
-- **Database:** H2 (in-memory)
-- **Build Tool:** Maven
+| Layer      | Technology                       |
+| ---------- | -------------------------------- |
+| Backend    | Java 17, Spring Boot, Spring MVC |
+| Security   | Spring Security                  |
+| Database   | H2 (in-memory), Spring Data JPA  |
+| Frontend   | Thymeleaf templating engine      |
+| Build Tool | Maven                            |
 
 ---
 
@@ -34,11 +37,16 @@ RedKart/
 │   │   │   ├── controller/
 │   │   │   ├── model/
 │   │   │   ├── repository/
-│   │   │   └── config/
-│   │   │   └── ShoppingCartApplication.java
+│   │   │   ├── service/
+│   │   │   ├── config/
+│   │   │   └── RedKartApplication.java
 │   │   └── resources/
 │   │       ├── templates/
-│   │       │   └── home.html
+│   │       │   ├── home.html
+│   │       │   ├── login.html
+│   │       │   └── register.html
+│   │       ├── static/css/
+│   │       │   └── main.css
 │   │       └── application.properties
 ├── pom.xml
 └── README.md
@@ -48,61 +56,77 @@ RedKart/
 
 ## ▶️ How to Run
 
-1. Clone the project and navigate into it:
+Clone the project and navigate into the directory:
 
 ```bash
-git clone <repo-url>
+git clone <your-repo-url>
 cd RedKart
 ```
 
-2. Run the application:
+Run the Spring Boot application:
 
 ```bash
 ./mvnw spring-boot:run
 ```
 
-3. Open in your browser:
+Open your browser and visit:
 
-[http://localhost:8090](http://localhost:8090)
-
----
-
-## 🗃 Database Console
-
-You can access the H2 console at:
-
-[http://localhost:8090/h2-console](http://localhost:8090/h2-console)
-
-JDBC URL: `jdbc:h2:mem:redkartdb`
+```
+http://localhost:8090
+```
 
 ---
 
-## 📦 Features Implemented
+## 🗃 H2 Database Console
 
-- Spring Boot project initialized
-- Custom home page with Thymeleaf
-- Spring Security disabled (for development)
-- Product entity with JPA
-- Repository for DB access
-- Sample product data auto-seeded
-- Dynamic product list on home page
+RedKart uses an in-memory H2 database for development.
+
+You can access the console at:
+
+```
+http://localhost:8090/h2-console
+```
+
+**JDBC URL:** `jdbc:h2:mem:redkartdb`
+
+> No username/password is required (default: `sa`)
 
 ---
 
+## 📦 Implemented Functionality
+
+* Spring Boot application runs on port `8090`
+* Product list displayed using Thymeleaf
+* Product data seeded automatically into DB on startup
+* User registration with password encryption
+* Login and logout functionality using Spring Security
+* Secure authentication with custom user details service
+* Dynamic HTML views rendered with Thymeleaf
+* Access to H2 console for development and debugging
+
+---
 
 ## 📌 Configuration
 
-All app settings can be found in:
+You can configure all application properties in:
 
-**`src/main/resources/application.properties`**
+📄 `src/main/resources/application.properties`
 
-You can update:
-- Server port
-- Database URL and credentials
-- Enable/disable H2 console
+```properties
+server.port=8090
+spring.datasource.url=jdbc:h2:mem:redkartdb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+spring.h2.console.enabled=true
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+```
+
+You can change the port, enable/disable H2, modify database settings, etc.
 
 ---
 
 ## 📜 License
 
-This project is licensed for learning and personal use.
+This project is licensed for educational and personal use under the [MIT License](LICENSE).

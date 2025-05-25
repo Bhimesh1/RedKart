@@ -1,20 +1,54 @@
-# 🛠️ Phase 4 Debug Log & Resolution Notes
+# 🧩 Problems Faced & Solutions – RedKart Project
 
-## 🐞 Issues Faced
+This file documents the key issues and blockers encountered during the development of the RedKart project, along with their respective solutions and notes.
 
-### 1. Infinite Redirect Loop on Login
+---
 
-**Error:** `ERR_TOO_MANY_REDIRECTS`
+## 🛠️ Phase 1 Debug Log & Resolution Notes
+
+**🐞 Issues Faced:**
+
+* N/A: Project initialized successfully without any configuration errors or blocking issues.
+
+✅ Outcome: Project booted with Spring login screen on port 8090.
+
+---
+
+## 🛠️ Phase 2 Debug Log & Resolution Notes
+
+**🐞 Issues Faced:**
+
+* N/A: Home controller and Thymeleaf view setup worked smoothly.
+
+✅ Outcome: Home page rendered correctly at `/` without login prompt (security disabled temporarily).
+
+---
+
+## 🛠️ Phase 3 Debug Log & Resolution Notes
+
+**🐞 Issues Faced:**
+
+* N/A: Product model, repository, and seeding logic all worked as expected.
+
+✅ Outcome: Products loaded and displayed on the homepage successfully.
+
+---
+
+## 🛠️ Phase 4 Debug Log & Resolution Notes
+
+### 🐞 1. Infinite Redirect Loop on Login
+
+**Error:** ERR\_TOO\_MANY\_REDIRECTS
 
 **Symptoms:**
 
-* Repeated `/login` calls
-* Network tab shows 302 status redirecting to `/login` again and again
+* Repeated `/login` requests
+* Browser kept redirecting to `/login` without proceeding
 
 **Cause:**
 
-* Missing GET handler for login page in `AuthController`
-* Login form wasn't submitting credentials properly (CSRF or field names)
+* Missing GET mapping for `/login` page
+* Login form didn't properly match expected field names (`username`, `password`)
 
 **Fix:**
 
@@ -25,38 +59,46 @@ public String showLoginForm() {
 }
 ```
 
-* Also ensured the `login.html` form:
+And in `login.html`:
 
-    * Uses method `POST`
-    * Has `username`, `password` fields
-    * Includes CSRF token
+* Used `method="POST"`
+* Input fields named `username` and `password`
+* Included CSRF token via:
+
+```html
+<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+```
+
+✅ Resolved and login now processes credentials correctly.
 
 ---
 
-### 2. H2 Console 403 Forbidden Error
+### 🐞 2. H2 Console 403 Forbidden Error
 
 **Error:** HTTP 403 (Forbidden)
 
-**Cause:** Spring Security was blocking access to `/h2-console` and denying frame rendering
+**Cause:**
 
-**Fix:**
+* Spring Security blocked `/h2-console/**`
+* Frame embedding for H2 was also blocked
 
-* Updated `SecurityConfig`:
+**Fix (in SecurityConfig):**
 
 ```java
 .authorizeHttpRequests(auth -> auth
     .requestMatchers("/h2-console/**", "/login", "/register", "/css/**", "/").permitAll()
-    .anyRequest().authenticated()
-)
+    .anyRequest().authenticated())
 .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
-.headers(headers -> headers.disable())
+.headers(headers -> headers.frameOptions().disable())
 ```
 
-> ⚠️ Note: `headers().disable()` is **dev-only** for allowing the H2 console (frame embedding).
+⚠️ `headers().disable()` is dev-only — enables iframes for H2 console.
+
+✅ Console accessible at `/h2-console` again.
 
 ---
 
-### 3. Duplicate PasswordEncoder Bean
+### 🐞 3. Duplicate PasswordEncoder Bean
 
 **Error:**
 
@@ -64,56 +106,57 @@ public String showLoginForm() {
 BeanDefinitionOverrideException: Cannot register bean definition 'passwordEncoder'
 ```
 
-**Cause:** Defined `passwordEncoder()` in both `SecurityBeans` and `SecurityConfig`
+**Cause:**
+
+* Password encoder bean was defined in both `SecurityBeans` and `SecurityConfig`
 
 **Fix:**
 
-* Removed duplicate definition from `SecurityConfig` and reused existing one from `SecurityBeans`
+* Removed the duplicate method from `SecurityConfig`
+* Reused existing bean from `SecurityBeans`
+
+✅ App boots without bean conflicts.
 
 ---
 
-## ✅ Outcome
+### 🐞 4. Login Form Not Authenticating Users
 
-* Login now works ✅
-* H2 Console is accessible ✅
-* User credentials from the H2 DB can be validated ✅
+**Problem:** Login form submits but user remains on same page (no errors shown)
+
+**Cause:**
+
+* Passwords in DB were stored in plaintext
+* Spring Security expected encoded passwords
+* Input field names did not match default `username` and `password`
+
+**Fix:**
+
+* Used `BCryptPasswordEncoder` for hashing passwords during registration
+* Updated form field names
+
+✅ Login now authenticates DB users correctly.
 
 ---
 
-# 📦 Git Push (Optional)
+## ✅ Phase 4 Outcome
 
-**✅ Yes, it's a good checkpoint to push to GitHub.**
+* Login page working ✅
+* Credentials verified from DB ✅
+* H2 console unblocked ✅
+* CSRF and frame handling addressed ✅
 
-Commit message:
+### 📦 Git Push (Optional)
+
+Yes, pushed the checkpoint after resolving major auth and console blockers.
 
 ```bash
 git add .
-git commit -m "feat: fix login redirect issue and secure H2 console"
+git commit -m "fix: login redirect loop and H2 access issue"
 git push origin main
 ```
 
----
-
-# 📌 Phase Summary
-
-## Phase 3 Recap ✅
-
-* [x] Implemented registration & form
-* [x] Form validations and persistence
-* [x] Registered users are saved to the DB
-* [x] Password encryption ✅
-
-✅ Fully complete!
-
-## Phase 4 Summary ✅
-
-* [x] Login endpoint and form working
-* [x] Secured routes using Spring Security
-* [x] Set up `CustomUserDetailsService`
-* [x] Integrated H2 console securely
-
-✅ Phase 4 complete!
+✅ Phase 4 fully complete.
 
 ---
 
-Ready to proceed to **Phase 5**
+✅ Ready to proceed to Phase 5.

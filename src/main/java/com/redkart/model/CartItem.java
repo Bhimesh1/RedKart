@@ -1,5 +1,7 @@
 package com.redkart.model;
 
+import com.redkart.model.Product;
+
 public class CartItem {
 
     private Product product;
@@ -18,11 +20,17 @@ public class CartItem {
         return quantity;
     }
 
-    public void incrementQuantity() {
+    public void increment() {
         this.quantity++;
     }
 
-    public void decrementQuantity() {
-        this.quantity--;
+    public void decrement() {
+        if (this.quantity > 1) {
+            this.quantity--;
+        }
+    }
+
+    public double getTotalPrice() {
+        return product.getPrice() * quantity;
     }
 }
